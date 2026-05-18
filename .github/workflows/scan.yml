@@ -36,18 +36,16 @@ jobs:
 
       - name: Complete WordPress Installation via WP-CLI
         env:
-          WORDPRESS_DB_PASSWORD: ${{ secrets.WORDPRESS_DB_PASSWORD }}
-          WORDPRESS_DB_HOST: ${{ vars.WORDPRESS_DB_HOST }}
-          WORDPRESS_DB_USER: ${{ vars.WORDPRESS_DB_USER }}
-          WORDPRESS_DB_NAME: ${{ vars.WORDPRESS_DB_NAME }}
           WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
         run: |
-          docker run --rm --network host wordpress:cli wp core install \
-            --path="/var/www/html" \
+          docker exec wp-site curl -sO https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          docker exec wp-site chmod +x wp-cli.phar
+
+          docker exec --user www-data wp-site ./wp-cli.phar core install \
             --url="http://localhost:8080" \
             --title="WPScan Test Site" \
             --admin_user="admin" \
-            --admin_password="TestingPassword123!" \
+            --admin_password="${WP_ADMIN_PASSWORD}" \
             --admin_email="test@example.com" \
             --skip-email
 
@@ -57,7 +55,7 @@ jobs:
             --url http://localhost:8080 \
             --enumerate u,vp,vt \
             --clear-cache \
-            --api-token ${{ secrets.WPSCAN_API_TOKEN }} \
+            --api-token ${{ secrets.WPSCAN_SECRET }} \
             --force | tee scans/wpscan-artifact.txt || true
 
       - name: Upload WPScan Artifact
@@ -65,3 +63,8 @@ jobs:
         with:
           name: wpscan-results
           path: scans/wpscan-artifact.txt
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker compose down
