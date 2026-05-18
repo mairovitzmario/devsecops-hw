@@ -6,20 +6,20 @@ on:
 jobs:
   wordpress-wpscan:
     runs-on: ubuntu-latest
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      WORDPRESS_DB_PASSWORD: ${{ secrets.WORDPRESS_DB_PASSWORD }}
+      MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+      MYSQL_USER: ${{ vars.MYSQL_USER }}
+      WORDPRESS_DB_HOST: ${{ vars.WORDPRESS_DB_HOST }}
+      WORDPRESS_DB_USER: ${{ vars.WORDPRESS_DB_USER }}
+      WORDPRESS_DB_NAME: ${{ vars.WORDPRESS_DB_NAME }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Start WordPress Environment
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          WORDPRESS_DB_PASSWORD: ${{ secrets.WORDPRESS_DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ vars.MYSQL_USER }}
-          WORDPRESS_DB_HOST: ${{ vars.WORDPRESS_DB_HOST }}
-          WORDPRESS_DB_USER: ${{ vars.WORDPRESS_DB_USER }}
-          WORDPRESS_DB_NAME: ${{ vars.WORDPRESS_DB_NAME }}
         run: |
           docker compose up -d
 
@@ -27,8 +27,11 @@ jobs:
         run: |
           echo "Waiting for WordPress to start..."
           for i in {1..30}; do
-            if curl -s http://localhost:8080/wp-content/ | grep -q "<title>"; then
-              echo "WordPress is ready!"
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || echo "000")
+            
+            # Check if the server responded with a valid HTTP status
+            if [[ "$HTTP_STATUS" =~ ^(200|301|302)$ ]]; then
+              echo "WordPress is ready! (Status: $HTTP_STATUS)"
               break
             fi
             sleep 5
