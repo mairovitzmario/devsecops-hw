@@ -21,21 +21,7 @@ jobs:
 
       - name: Start WordPress Environment
         run: |
-          docker compose up -d
-
-      - name: Wait for WordPress to be ready
-        run: |
-          echo "Waiting for WordPress to start..."
-          for i in {1..30}; do
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || echo "000")
-            
-            # Check if the server responded with a valid HTTP status
-            if [[ "$HTTP_STATUS" =~ ^(200|301|302)$ ]]; then
-              echo "WordPress is ready! (Status: $HTTP_STATUS)"
-              break
-            fi
-            sleep 5
-          done
+          docker compose up --wait
 
       - name: Complete WordPress Installation via WP-CLI
         env:
