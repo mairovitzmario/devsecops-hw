@@ -45,7 +45,7 @@ jobs:
             --enumerate u,vp,vt \
             --clear-cache \
             --api-token ${{ secrets.WPSCAN_SECRET }} \
-            --force | tee scans/wpscan-artifact.txt || true
+            --force | tee scans/wpscan-artifact.txt
 
       - name: Upload WPScan Artifact
         uses: actions/upload-artifact@v4
