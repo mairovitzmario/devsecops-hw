@@ -1,0 +1,107 @@
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.8.28
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart
+_______________________________________________________________
+
+[34m[i][0m It seems like you have not updated the database for some time.
+[?] Do you want to update now? [Y]es [N]o, default: [N][32m[+][0m URL: http://localhost:8080/ [::1]
+[32m[+][0m Started: Mon May 18 21:13:00 2026
+
+Interesting Finding(s):
+
+[32m[+][0m Headers
+ | Interesting Entries:
+ |  - Server: Apache/2.4.67 (Debian)
+ |  - X-Powered-By: PHP/8.3.31
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[32m[+][0m XML-RPC seems to be enabled: http://localhost:8080/xmlrpc.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+ | References:
+ |  - http://codex.wordpress.org/XML-RPC_Pingback_API
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_ghost_scanner/
+ |  - https://www.rapid7.com/db/modules/auxiliary/dos/http/wordpress_xmlrpc_dos/
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_xmlrpc_login/
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_pingback_access/
+
+[32m[+][0m WordPress readme found: http://localhost:8080/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[32m[+][0m The external WP-Cron seems to be enabled: http://localhost:8080/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[32m[+][0m WordPress version 6.9.4 identified (Latest, released on 2026-03-11).
+ | Found By: Rss Generator (Passive Detection)
+ |  - http://localhost:8080/?feed=rss2, <generator>https://wordpress.org/?v=6.9.4</generator>
+ |  - http://localhost:8080/?feed=comments-rss2, <generator>https://wordpress.org/?v=6.9.4</generator>
+
+[32m[+][0m WordPress theme in use: twentytwentyfive
+ | Location: http://localhost:8080/wp-content/themes/twentytwentyfive/
+ | Latest Version: 1.4 (up to date)
+ | Last Updated: 2025-12-03T00:00:00.000Z
+ | Readme: http://localhost:8080/wp-content/themes/twentytwentyfive/readme.txt
+ | Style URL: http://localhost:8080/wp-content/themes/twentytwentyfive/style.css
+ | Style Name: Twenty Twenty-Five
+ | Style URI: https://wordpress.org/themes/twentytwentyfive/
+ | Description: Twenty Twenty-Five emphasizes simplicity and adaptability. It offers flexible design options, suppor...
+ | Author: the WordPress team
+ | Author URI: https://wordpress.org
+ |
+ | Found By: Urls In Homepage (Passive Detection)
+ | Confirmed By: Urls In 404 Page (Passive Detection)
+ |
+ | Version: 1.4 (80% confidence)
+ | Found By: Style (Passive Detection)
+ |  - http://localhost:8080/wp-content/themes/twentytwentyfive/style.css, Match: 'Version: 1.4'
+
+[32m[+][0m Enumerating Vulnerable Plugins (via Passive Methods)
+
+[34m[i][0m No plugins Found.
+
+[32m[+][0m Enumerating Vulnerable Themes (via Passive and Aggressive Methods)
+
+ Checking Known Locations -: |=================================================|
+[32m[+][0m Checking Theme Versions (via Passive and Aggressive Methods)
+
+[34m[i][0m No themes Found.
+
+[32m[+][0m Enumerating Users (via Passive and Aggressive Methods)
+
+ Brute Forcing Author IDs -: |=================================================|
+
+[34m[i][0m User(s) Identified:
+
+[32m[+][0m admin
+ | Found By: Rss Generator (Passive Detection)
+ | Confirmed By:
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[32m[+][0m WPScan DB API OK
+ | Plan: free
+ | Requests Done (during the scan): 2
+ | Requests Remaining: 17
+
+[32m[+][0m Finished: Mon May 18 21:13:42 2026
+[32m[+][0m Requests Done: 1362
+[32m[+][0m Cached Requests: 11
+[32m[+][0m Data Sent: 361.872 KB
+[32m[+][0m Data Received: 41.857 MB
+[32m[+][0m Memory used: 302.074 MB
+[32m[+][0m Elapsed time: 00:00:41
