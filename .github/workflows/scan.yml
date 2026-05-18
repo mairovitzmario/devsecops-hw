@@ -11,9 +11,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Start WordPress Environment
-        # We tell Docker to use the compose file located in your /docker folder
+        env:
+          # added as vars cuz its testing env
+          MYSQL_ROOT_PASSWORD: ${{ vars.MYSQL_ROOT_PASSWORD }}
+          MYSQL_PASSWORD: ${{ vars.MYSQL_PASSWORD }}
+          WORDPRESS_DB_PASSWORD: ${{ vars.WORDPRESS_DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
+          WORDPRESS_DB_HOST: ${{ vars.WORDPRESS_DB_HOST }}
+          WORDPRESS_DB_USER: ${{ vars.WORDPRESS_DB_USER }}
+          WORDPRESS_DB_NAME: ${{ vars.WORDPRESS_DB_NAME }}
         run: |
-          docker compose -f docker/docker-compose.yml up -d
+          docker compose up -d
 
       - name: Wait for WordPress to be ready
         run: |
@@ -31,4 +40,5 @@ jobs:
           docker run --rm --network host wpscanteam/wpscan \
             --url http://localhost:8080 \
             --enumerate u,vp,vt \
+            --api-token ${{ secrets.WPSCAN_API_TOKEN }} \
             --force || true
