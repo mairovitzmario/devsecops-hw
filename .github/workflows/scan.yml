@@ -41,4 +41,4 @@ jobs:
             --url http://localhost:8080 \
             --enumerate u,vp,vt \
             --api-token ${{ secrets.WPSCAN_API_TOKEN }} \
-            --force || true
+            --force | tee scans/wpscan-artifact.txt || true
