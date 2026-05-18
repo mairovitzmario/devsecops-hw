@@ -35,10 +35,22 @@ jobs:
             sleep 5
           done
 
+      - name: Complete WordPress Installation via WP-CLI
+        run: |
+          docker run --rm --network host wordpress:cli wp core install \
+            --path="/var/www/html" \
+            --url="http://localhost:8080" \
+            --title="WPScan Test Site" \
+            --admin_user="admin" \
+            --admin_password="TestingPassword123!" \
+            --admin_email="test@example.com" \
+            --skip-email
+
       - name: Run WPScan via Docker
         run: |
           docker run --rm --network host wpscanteam/wpscan \
             --url http://localhost:8080 \
             --enumerate u,vp,vt \
+            --clear-cache \
             --api-token ${{ secrets.WPSCAN_API_TOKEN }} \
             --force | tee scans/wpscan-artifact.txt || true
