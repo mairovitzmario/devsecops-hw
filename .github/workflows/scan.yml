@@ -12,10 +12,9 @@ jobs:
 
       - name: Start WordPress Environment
         env:
-          # added as vars cuz its testing env
-          MYSQL_ROOT_PASSWORD: ${{ vars.MYSQL_ROOT_PASSWORD }}
-          MYSQL_PASSWORD: ${{ vars.MYSQL_PASSWORD }}
-          WORDPRESS_DB_PASSWORD: ${{ vars.WORDPRESS_DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          WORDPRESS_DB_PASSWORD: ${{ secrets.WORDPRESS_DB_PASSWORD }}
           MYSQL_DATABASE: ${{ vars.MYSQL_DATABASE }}
           MYSQL_USER: ${{ vars.MYSQL_USER }}
           WORDPRESS_DB_HOST: ${{ vars.WORDPRESS_DB_HOST }}
@@ -36,6 +35,12 @@ jobs:
           done
 
       - name: Complete WordPress Installation via WP-CLI
+        env:
+          WORDPRESS_DB_PASSWORD: ${{ secrets.WORDPRESS_DB_PASSWORD }}
+          WORDPRESS_DB_HOST: ${{ vars.WORDPRESS_DB_HOST }}
+          WORDPRESS_DB_USER: ${{ vars.WORDPRESS_DB_USER }}
+          WORDPRESS_DB_NAME: ${{ vars.WORDPRESS_DB_NAME }}
+          WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
         run: |
           docker run --rm --network host wordpress:cli wp core install \
             --path="/var/www/html" \
@@ -54,3 +59,9 @@ jobs:
             --clear-cache \
             --api-token ${{ secrets.WPSCAN_API_TOKEN }} \
             --force | tee scans/wpscan-artifact.txt || true
+
+      - name: Upload WPScan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpscan-results
+          path: scans/wpscan-artifact.txt
