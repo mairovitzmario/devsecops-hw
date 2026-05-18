@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  wp-db:
+    image: mysql:5.7
+    container_name: wp-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?}
+      MYSQL_USER: ${MYSQL_USER:?}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?}
+    ports:
+      - "3306:3306"
+
+  wp-site:
+    image: wordpress:latest
+    container_name: wp-site
+    depends_on:
+      - wp-db
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST:?}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:?}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:?}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:?}
+    ports:
+      - "8080:80"
