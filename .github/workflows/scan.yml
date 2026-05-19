@@ -32,10 +32,7 @@ jobs:
           WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
           WP_ADMIN_EMAIL: ${{ secrets.WP_ADMIN_EMAIL }}
         run: |
-          docker exec wp-site curl -sO https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          docker exec wp-site chmod +x wp-cli.phar
-
-          docker exec --user www-data wp-site ./wp-cli.phar core install \
+          docker exec --user www-data wp-site wp core install \
             --url="http://localhost:8080" \
             --title="WPScan Test Site" \
             --admin_user="${WP_ADMIN_USER}" \
