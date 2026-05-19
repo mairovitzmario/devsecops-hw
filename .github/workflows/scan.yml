@@ -55,6 +55,20 @@ jobs:
           name: wpscan-results
           path: scans/wpscan-artifact.txt
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push secure image to GHCR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/mairovitzmario/wp-hardened:latest
+
       - name: Cleanup
         if: always()
         run: |
