@@ -19,7 +19,7 @@ RUN a2enmod headers rewrite && \
 # Block XML-RPC and WP-Cron access
 <FilesMatch "^(xmlrpc\.php|wp-cron\.php)$">
     Require all denied
-</FilesMatch>
+</FilesMatch> 
 
 # Disable directory indexing and spoof 404 for MU-Plugins direct access
 Options -Indexes
