@@ -9,11 +9,9 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE:?}
       MYSQL_USER: ${MYSQL_USER:?}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:?}
-    ports:
-      - "3306:3306"
 
   wp-site:
-    image: wordpress:latest
+    build: .
     container_name: wp-site
     depends_on:
       - wp-db

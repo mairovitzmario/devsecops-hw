@@ -21,11 +21,13 @@ jobs:
 
       - name: Start WordPress Environment
         run: |
-          docker compose up --wait
+          docker compose up --build --wait
 
       - name: Complete WordPress Installation via WP-CLI
         env:
           WP_ADMIN_PASSWORD: ${{ secrets.WP_ADMIN_PASSWORD }}
+          WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
+          WP_ADMIN_EMAIL: ${{ secrets.WP_ADMIN_EMAIL }}
         run: |
           docker exec wp-site curl -sO https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
           docker exec wp-site chmod +x wp-cli.phar
@@ -33,9 +35,9 @@ jobs:
           docker exec --user www-data wp-site ./wp-cli.phar core install \
             --url="http://localhost:8080" \
             --title="WPScan Test Site" \
-            --admin_user="admin" \
+            --admin_user="${WP_ADMIN_USER}" \
             --admin_password="${WP_ADMIN_PASSWORD}" \
-            --admin_email="test@example.com" \
+            --admin_email="${WP_ADMIN_EMAIL}" \
             --skip-email
 
       - name: Run WPScan via Docker
